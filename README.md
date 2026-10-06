@@ -6,6 +6,8 @@
 **Type:** Semester project, Kathmandu University
 **Languages (UI):** Nepali + English labels, minimal text
 
+**Live website:** [https://sikaru.devstha.com.np/](https://sikaru.devstha.com.np/)
+
 ---
 
 ## What is Sikaru?
