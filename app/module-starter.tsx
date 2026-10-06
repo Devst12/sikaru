@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type ModuleStarterProps = {
   title: string;
@@ -15,7 +16,7 @@ export function ModuleStarter({ title, english, icon, accent, foundation, steps,
     <main className="module-shell">
       <header className="module-header">
         <Link className="back-link" href="/" aria-label="Back to learning garden">←</Link>
-        <Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">s</span><span>sikaru<span className="brand-dot">.</span></span></Link>
+        <Link className="brand" href="/" aria-label="Sikaru home"><Image className="brand-logo" src="/logo.png" width={816} height={816} alt="" /></Link>
         <span className="module-header-label">LET’S LEARN</span>
       </header>
       <section className={`module-welcome ${accent}`}>
