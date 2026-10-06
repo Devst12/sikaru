@@ -6,9 +6,9 @@
 
 ## 1. Current status
 
-- **Current phase:** Phase 0 (decisions)
-- **Last completed task:** Documentation set written (README, PRD, ARCHITECTURE, RULES, PHASES, DESIGN, MEMORY)
-- **Next task:** 0.1 Confirm demo hardware
+- **Current phase:** Phase 1 (project setup)
+- **Last completed task:** Home learning garden and module starter pages (Phase 1.4, 1.6)
+- **Next task:** 1.5 Build shared components (Button, StarRow, Modal, Mascot placeholder)
 - **Blockers:** none
 
 ## 2. Key decisions
@@ -32,6 +32,7 @@
 | 2026-10-06 | Math is built from about 9 reusable visual primitives; each way is a config of a primitive | Keeps 4-5 ways per concept feasible |
 | 2026-10-06 | Tracing scoring uses coverage, precision, direction, and stroke order | Devanagari handwriting depends on stroke order, not only final shape |
 | 2026-10-06 | Classroom model: one child at the smartboard or TV, class watching | Schools lack tablets for every child |
+| 2026-10-06 | Begin the home screen before hardware, font, and account decisions are finalized; use a responsive classroom-first layout and keep unresolved decisions open | Owner asked to start building from the docs |
 
 ## 3. Open questions
 
@@ -50,6 +51,8 @@
 
 | Date | Task | Result | Notes |
 |---|---|---|---|
+| 2026-10-06 | Removed broken remote Geist font loading | Turbopack could not resolve its internal Google font module | Removed next/font/google; use system font fallbacks including Nirmala UI for Devanagari. Build compilation succeeds; standalone TypeScript check passes. |
+| 2026-10-06 | Foundation-first home and module starters | Done | Added the learning garden, three module cards and destination pages; updated metadata and design tokens. Visual verification not run. |
 | 2026-10-06 | Docs set created | Done | Starting point of the project |
 | 2026-10-06 | Docs updated: Dexie replaced by Supabase + MongoDB | Done | README, PRD, ARCHITECTURE, RULES, PHASES, MEMORY |
 | 2026-10-06 | Docs updated: accounts (guest, email, Google) and math concepts x methods added | Done | All seven files |
@@ -59,7 +62,7 @@
 
 | Date | Bug | Cause | Fix |
 |---|---|---|---|
-| (none yet) | | | |
+| 2026-10-06 | Geist font module not found in Turbopack | next/font/google emitted unresolved internal font URLs | Removed Google font imports and switched to system font fallbacks. |
 
 ## 6. Scoring tuning log
 
