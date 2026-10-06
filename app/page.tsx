@@ -1,69 +1,114 @@
-import Image from "next/image";
+import Link from "next/link";
+
+const modules = [
+  {
+    href: "/math",
+    icon: "🍊",
+    title: "गणित",
+    english: "Math",
+    note: "Count, build & discover",
+    className: "math-card",
+    badge: "01",
+  },
+  {
+    href: "/puzzles",
+    icon: "🧩",
+    title: "खेलौँ",
+    english: "Puzzles",
+    note: "Look closely. Find a way.",
+    className: "puzzle-card",
+    badge: "02",
+  },
+  {
+    href: "/trace",
+    icon: "✏️",
+    title: "लेखौँ",
+    english: "Trace",
+    note: "Start with a simple stroke",
+    className: "trace-card",
+    badge: "03",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="home-shell">
+      <header className="topbar">
+        <Link className="brand" href="/" aria-label="Sikaru home">
+          <span className="brand-mark" aria-hidden="true">s</span>
+          <span>sikaru<span className="brand-dot">.</span></span>
+        </Link>
+        <div className="topbar-right">
+          <span className="classroom-pill"><span className="live-dot" /> CLASSROOM MODE</span>
+          <button className="avatar-button" aria-label="Learner profile">🌱</button>
+        </div>
+      </header>
+
+      <section className="welcome-grid" aria-labelledby="welcome-title">
+        <div className="welcome-copy">
+          <p className="eyebrow"><span className="eyebrow-line" /> LEARN A LITTLE. GROW A LOT.</p>
+          <h1 id="welcome-title">Big ideas start<br />with <span>little steps.</span></h1>
+          <p className="welcome-description">
+            See it. Make it. Then solve it.<br className="desktop-break" /> Every step builds a strong foundation.
           </p>
+          <div className="foundation-note">
+            <span className="foundation-sparkle" aria-hidden="true">✳</span>
+            <span><strong>तयार छौ?</strong><small>Ready to learn?</small></span>
+            <span className="foundation-arrow" aria-hidden="true">↓</span>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="growth-art" aria-hidden="true">
+          <div className="sun-orbit" />
+          <div className="growth-sun">☀️</div>
+          <div className="growth-cloud cloud-one">☁</div>
+          <div className="growth-cloud cloud-two">☁</div>
+          <div className="growth-hill hill-back" />
+          <div className="growth-hill hill-front" />
+          <div className="seedling">
+            <span className="leaf leaf-left" />
+            <span className="leaf leaf-right" />
+            <span className="stem" />
+            <span className="soil" />
+          </div>
+          <span className="floating-star star-one">✦</span>
+          <span className="floating-star star-two">✧</span>
+          <span className="art-caption">little steps, strong roots</span>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="learning-section" aria-labelledby="choose-title">
+        <div className="section-heading">
+          <div>
+            <p className="section-kicker">YOUR LEARNING GARDEN</p>
+            <h2 id="choose-title">What shall we grow today?</h2>
+          </div>
+          <span className="section-hint">Pick one to begin <span aria-hidden="true">↘</span></span>
+        </div>
+
+        <div className="module-grid">
+          {modules.map((module) => (
+            <Link className={`module-card ${module.className}`} href={module.href} key={module.href}>
+              <div className="card-topline">
+                <span className="card-number">{module.badge}</span>
+                <span className="card-arrow" aria-hidden="true">↗</span>
+              </div>
+              <span className="module-icon" aria-hidden="true">{module.icon}</span>
+              <div className="module-title-row">
+                <h3>{module.title}</h3>
+                <span>{module.english}</span>
+              </div>
+              <p>{module.note}</p>
+              <span className="card-decoration" aria-hidden="true" />
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <footer className="home-footer">
+        <div className="footer-motto"><span>✿</span> सबल जग बलियो जग <i>·</i> A strong foundation for every little learner</div>
+        <div className="footer-sprinkles" aria-hidden="true"><span>✳</span><span>✦</span><span>✿</span></div>
+      </footer>
+    </main>
   );
 }
