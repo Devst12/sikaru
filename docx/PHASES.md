@@ -7,10 +7,11 @@ Legend: `[ ]` todo, `[x]` done
 
 ## Current implementation checkpoint
 
-- The child can play a counting round at `/math/counting` using Watch, Build, and Solve with fruit objects and gentle answers.
+- The child can play a counting round at `/math/counting` using Watch, Build, and Solve with fruit objects and gentle answers; its prompt and objects load from MongoDB content.
 - The child can complete a shape matching round at `/puzzles/match` with optional hints and a teacher prompt.
-- The child can practice seven pre-writing strokes at `/trace/practice` with pointer input, guides, clear, and next-stroke controls.
-- These are initial playable slices. They do not complete the later phase requirements for engine tests, scoring, additional visual ways, puzzle ladders, content templates, accounts, saved progress, offline sync, or PWA support.
+- The child can practice seven pre-writing strokes at `/trace/practice` with pointer input, guides, clear, next-stroke controls, and immediate guide-based star feedback. This is an initial scoring integration; the ordered tracing ladder and normalized letter templates are still outstanding.
+- These are initial playable slices. Tracing has a first scoring-feedback integration, but the complete documented requirements for tracing levels, more visual math ways, puzzle ladders, letter templates, accounts, saved progress, offline sync, and PWA support are still outstanding.
+- MongoDB content is live: `npm run db:seed` processes `content/math-counting.json`, `content/shape-pairs.json`, and `content/prewriting.json`; `/api/content` validates and serves MongoDB documents with a bundled fallback.
 
 ---
 
@@ -30,7 +31,7 @@ Legend: `[ ]` todo, `[x]` done
 - [ ] **1.5** Build shared components: `Button` (large), `StarRow`, `Modal`, `Mascot` placeholder. *Done when:* shown on a test page.
 - [x] **1.6** Home page with 3 big module cards (Math, Puzzles, Trace). *Done when:* cards navigate to empty pages. (2026-10-06: Added the foundation-first learning garden and linked Math, Puzzles, and Trace starter pages.)
 - [ ] **1.7** Create Supabase project, Prisma schema (`accounts`, `classrooms`, `learners`, `attempts` with nullable `method`, `bests`, `progress`), first migration, RLS enabled with no public policies. *Done when:* `npx prisma migrate dev` succeeds and tables exist.
-- [ ] **1.8** Create MongoDB cluster, Mongo client, and `scripts/seed-content.ts` skeleton. *Done when:* a test document is written and read back.
+- [x] **1.8** Create MongoDB cluster, Mongo client, and `scripts/seed-content.mjs`. *Done when:* learning content is seeded and read back. (2026-10-06: Seeded nine records and confirmed all three content kinds return MongoDB data.)
 - [ ] **1.9** `.env.example` and validated `server/env.ts` (pooled + direct Postgres URLs, Mongo URI). *Done when:* app fails fast with a clear message if a variable is missing.
 
 ## Phase 1B: Accounts and guest mode
@@ -56,13 +57,13 @@ Legend: `[ ]` todo, `[x]` done
 
 ## Phase 2: Scoring engine (no UI yet)
 
-- [ ] **2.1** Geometry helpers: distance, normalize to box, resample stroke to N points. *Done when:* unit tests pass.
-- [ ] **2.2** Coverage score. *Done when:* tests pass on perfect and partial fixtures.
-- [ ] **2.3** Precision score. *Done when:* tests pass on shaky and scribble fixtures.
-- [ ] **2.4** Direction score. *Done when:* tests pass on reversed-stroke fixture.
-- [ ] **2.5** Stroke order score. *Done when:* tests pass on wrong-order fixture.
-- [ ] **2.6** Combine into `scoreAttempt()` with constants file and star thresholds. *Done when:* the six fixtures produce expected stars.
-- [ ] **2.7** Zod schemas for letter templates and content loader. *Done when:* invalid JSON is rejected with a clear error.
+- [x] **2.1** Geometry helpers: distance, normalize to box, resample stroke to N points. *Done when:* unit tests pass. (2026-10-06: Implemented pure helpers; Vitest fixtures pass.)
+- [x] **2.2** Coverage score. *Done when:* tests pass on perfect and partial fixtures. (2026-10-06)
+- [x] **2.3** Precision score. *Done when:* tests pass on shaky and scribble fixtures. (2026-10-06)
+- [x] **2.4** Direction score. *Done when:* tests pass on reversed-stroke fixture. (2026-10-06)
+- [x] **2.5** Stroke order score. *Done when:* tests pass on wrong-order fixture. (2026-10-06)
+- [x] **2.6** Combine into `scoreAttempt()` with constants file and star thresholds. *Done when:* the six fixtures produce expected stars. (2026-10-06: 13 scoring and schema tests pass.)
+- [x] **2.7** Zod schemas for letter templates and content loader. *Done when:* invalid JSON is rejected with a clear error. (2026-10-06: Added the normalized template schema and parser with rejection fixture.)
 - [ ] **2.8** Content repositories (MongoDB) + `/api/content` + bundled JSON fallback loader. *Done when:* letters load from MongoDB, and from bundled JSON when the database is unreachable.
 
 ## Phase 3: Tracing module
