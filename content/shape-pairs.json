@@ -1,0 +1,12 @@
+[
+  {
+    "id": "shapes-level-1",
+    "kind": "shape-pairs",
+    "title": "Find the same shapes",
+    "pairs": [
+      { "id": "circle", "shape": "●", "label": "circle" },
+      { "id": "star", "shape": "★", "label": "star" },
+      { "id": "triangle", "shape": "▲", "label": "triangle" }
+    ]
+  }
+]
