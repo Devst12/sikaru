@@ -6,10 +6,10 @@
 
 ## 1. Current status
 
-- **Current phase:** Phase 1 (project setup)
-- **Last completed task:** Initial playable activities for counting, shape matching, and pre-writing strokes
-- **Next task:** 1.5 Build shared components (Button, StarRow, Modal, Mascot placeholder)
-- **Blockers:** none
+- **Current phase:** Phase 2 (scoring engine; setup gaps remain in Phase 1)
+- **Last completed task:** Scoring engine geometry, metrics, attempt scoring, and letter-template validation (Phase 2.1-2.7)
+- **Next task:** 2.8 Add letter-template content to the MongoDB repository and bundled fallback
+- **Blockers:** Supabase project variables are not configured; account sign-in and cloud progress need them.
 
 ## 2. Key decisions
 
@@ -33,6 +33,7 @@
 | 2026-10-06 | Tracing scoring uses coverage, precision, direction, and stroke order | Devanagari handwriting depends on stroke order, not only final shape |
 | 2026-10-06 | Classroom model: one child at the smartboard or TV, class watching | Schools lack tablets for every child |
 | 2026-10-06 | Begin the home screen before hardware, font, and account decisions are finalized; use a responsive classroom-first layout and keep unresolved decisions open | Owner asked to start building from the docs |
+| 2026-10-06 | MongoDB `learning_content` collection serves counting, shape-pair, and pre-writing content; bundled JSON remains the fallback | User provided the MongoDB connection |
 
 ## 3. Open questions
 
@@ -51,7 +52,10 @@
 
 | Date | Task | Result | Notes |
 |---|---|---|---|
-| 2026-10-06 | Initial playable learning activities | In progress | Added counting Watch/Build/Solve, matching pairs, and pointer-based pre-writing practice with optional help. These are starter slices; persistence, formal scoring, tests, and remaining curriculum are outstanding. TypeScript and targeted ESLint pass; all four route smoke checks returned 200. |
+| 2026-10-06 | Tracing feedback integration | In progress | Connected the pure scoring engine to the pre-writing practice screen. It samples the visible SVG guide, scores the drawn stroke on pointer-up, and shows a child-friendly star result. TypeScript and targeted ESLint pass; this UI integration needs a browser interaction check. |
+| 2026-10-06 | Scoring engine (Phase 2.1-2.7) | Done | Added geometry helpers, four metrics, normalized weighted score, stars, Zod template schema, and six scoring fixtures. `npm run typecheck`, targeted ESLint, and 13 Vitest tests pass. |
+| 2026-10-06 | MongoDB learning content connection | Done | Added official driver, Zod schemas, `/api/content`, idempotent `db:seed`, and bundled fallback. Seeded and read back math counting, shape pairs, and seven pre-writing items without exposing the URI. |
+| 2026-10-06 | Initial playable learning activities | In progress | Added counting Watch/Build/Solve, matching pairs, and pointer-based pre-writing practice with optional help. Saved progress, full curriculum, and account integration are outstanding. |
 | 2026-10-06 | Removed broken remote Geist font loading | Turbopack could not resolve its internal Google font module | Removed next/font/google; use system font fallbacks including Nirmala UI for Devanagari. Build compilation succeeds; standalone TypeScript check passes. |
 | 2026-10-06 | Foundation-first home and module starters | Done | Added the learning garden, three module cards and destination pages; updated metadata and design tokens. Visual verification not run. |
 | 2026-10-06 | Docs set created | Done | Starting point of the project |
@@ -63,6 +67,7 @@
 
 | Date | Bug | Cause | Fix |
 |---|---|---|---|
+| 2026-10-06 | Pointer drawing crash on trace canvas | `currentTarget` was read inside a deferred React state updater after the event ended | Capture point coordinates synchronously before updating state. |
 | 2026-10-06 | Geist font module not found in Turbopack | next/font/google emitted unresolved internal font URLs | Removed Google font imports and switched to system font fallbacks. |
 
 ## 6. Scoring tuning log
@@ -71,11 +76,14 @@ Record every change to weights, tolerances, or star thresholds here.
 
 | Date | Change | Reason | Test updated |
 |---|---|---|---|
-| (initial) | weights 0.35 / 0.30 / 0.20 / 0.15; stars at 0.80 / 0.60 / 0.35 | Starting values, to be tuned with real drawings | not yet |
+| (initial) | weights 0.35 / 0.30 / 0.20 / 0.15; stars at 0.80 / 0.60 / 0.35 | Starting values from the architecture doc | not yet |
+| 2026-10-06 | weights 0.30 / 0.23 / 0.25 / 0.22; stars unchanged | A single reversed-direction or wrong-order stroke should fall to 2 stars in the initial fixture set | Added perfect, shaky, partial, scribble, reversed, and wrong-order fixtures; all pass |
 
 ## 7. Lessons and gotchas
 
 - Guest data lives in the browser's anonymous session; clearing browser data or signing out without upgrading loses it.
+- Plain Node scripts do not load `.env`; the Mongo seed script uses Next's `@next/env` loader.
+- Vitest 5's `@types/node` peer range conflicted with this repo's Node 20 types; Vitest 4 is installed and passes under Node 24.
 - (add as discovered, for example Windows/PowerShell quirks, smartboard touch issues, font rendering problems)
 
 ## 8. Future ideas parking lot
