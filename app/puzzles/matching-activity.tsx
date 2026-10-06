@@ -1,29 +1,53 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import bundledShapes from "@/content/shape-pairs.json";
 
-const CARDS = [
-  { id: "circle-a", shape: "●", label: "circle" },
-  { id: "star-a", shape: "★", label: "star" },
-  { id: "triangle-a", shape: "▲", label: "triangle" },
-  { id: "circle-b", shape: "●", label: "circle" },
-  { id: "star-b", shape: "★", label: "star" },
-  { id: "triangle-b", shape: "▲", label: "triangle" },
-];
+type ShapeCard = { id: string; shape: string; label: string };
+
+function makeCards(pairs: typeof bundledShapes[number]["pairs"]): ShapeCard[] {
+  return pairs.flatMap((pair) => [
+    { ...pair, id: `${pair.id}-a` },
+    { ...pair, id: `${pair.id}-b` },
+  ]);
+}
 
 export function MatchingActivity() {
+  const [cards, setCards] = useState<ShapeCard[]>(() => makeCards(bundledShapes[0].pairs));
+  const [title, setTitle] = useState(bundledShapes[0].title);
   const [open, setOpen] = useState<string[]>([]);
   const [matched, setMatched] = useState<string[]>([]);
   const [hintOpen, setHintOpen] = useState(false);
   const [teacherOpen, setTeacherOpen] = useState(false);
+  const [contentNotice, setContentNotice] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    void fetch("/api/content?kind=shape-pairs")
+      .then((response) => {
+        if (!response.ok) throw new Error("Content request failed");
+        return response.json() as Promise<{ items: typeof bundledShapes }>;
+      })
+      .then((data) => {
+        const puzzle = data.items[0];
+        if (!active || !puzzle) return;
+        setCards(makeCards(puzzle.pairs));
+        setTitle(puzzle.title);
+      })
+      .catch(() => {
+        console.error("[puzzles] Content refresh failed; bundled cards are still available.");
+        if (active) setContentNotice("We’re using the ready-to-play starter shapes.");
+      });
+    return () => { active = false; };
+  }, []);
 
   function pickCard(id: string, shape: string) {
     if (open.includes(id) || matched.includes(id) || open.length === 2) return;
     const next = [...open, id];
     setOpen(next);
     if (next.length === 2) {
-      const first = CARDS.find((card) => card.id === next[0]);
+      const first = cards.find((card) => card.id === next[0]);
       if (first?.shape === shape) {
         setMatched([...matched, ...next]);
         setOpen([]);
@@ -38,19 +62,20 @@ export function MatchingActivity() {
     setMatched([]);
   }
 
-  const complete = matched.length === CARDS.length;
+  const complete = matched.length === cards.length;
+  const hintCardId = cards[0]?.id;
 
   return (
     <main className="activity-shell puzzle-activity">
       <header className="activity-header">
         <Link className="back-link" href="/puzzles" aria-label="Back to puzzles">←</Link>
-        <div><span className="activity-eyebrow">PUZZLES · MATCH</span><h1>Find the same shapes</h1></div>
+        <div><span className="activity-eyebrow">PUZZLES · MATCH</span><h1>{title}</h1></div>
         <span className="activity-level">🌱 <span>Level 1</span></span>
       </header>
       <div className="puzzle-prompt"><span aria-hidden="true">🦊</span><p>{complete ? "You found all the matching shapes!" : "Turn over two shapes. Do they look the same?"}</p></div>
       <section className="matching-board" aria-label="Shape matching game">
-        {CARDS.map((card) => {
-          const revealed = open.includes(card.id) || matched.includes(card.id) || (hintOpen && card.id === "circle-a");
+        {cards.map((card) => {
+          const revealed = open.includes(card.id) || matched.includes(card.id) || (hintOpen && card.id === hintCardId);
           return <button
             className={`shape-card ${revealed ? "revealed" : ""} ${matched.includes(card.id) ? "matched" : ""}`}
             key={card.id}
@@ -61,6 +86,7 @@ export function MatchingActivity() {
           ><span>{revealed ? card.shape : "?"}</span>{revealed && <small>{card.label}</small>}</button>;
         })}
       </section>
+      {contentNotice && <p className="content-notice" role="status">{contentNotice}</p>}
       {complete && <div className="kind-feedback" role="status"><span aria-hidden="true">✨</span> Every shape has a friend!</div>}
       <div className="puzzle-bottom-row">
         {complete && <button className="primary-action" onClick={reset}>Play again <span aria-hidden="true">↻</span></button>}
