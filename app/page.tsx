@@ -98,7 +98,7 @@ export default function Home() {
       </section>
 
       <footer className="home-footer">
-        <div className="footer-motto"><span>✿</span> सबल जग बलियो जग <i>·</i> A strong foundation for every little learner</div>
+        <div className="footer-motto"><span>✿</span>  A strong foundation for every little learner</div>
         <div className="footer-sprinkles" aria-hidden="true"><span>✳</span><span>✦</span><span>✿</span></div>
       </footer>
     </main>
