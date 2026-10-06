@@ -1,28 +1,45 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type PointerEvent } from "react";
-
-const STROKES = [
-  { name: "Standing line", glyph: "│", path: "M300 52 L300 248", start: { x: 300, y: 52 } },
-  { name: "Sleeping line", glyph: "─", path: "M130 150 L470 150", start: { x: 130, y: 150 } },
-  { name: "Slanting line", glyph: "╱", path: "M170 238 L430 62", start: { x: 170, y: 238 } },
-  { name: "Curve", glyph: "⌒", path: "M145 190 Q300 35 455 190", start: { x: 145, y: 190 } },
-  { name: "Circle", glyph: "○", path: "M385 150 A85 85 0 1 1 215 150 A85 85 0 1 1 385 150", start: { x: 385, y: 150 } },
-  { name: "Zigzag", glyph: "⌁", path: "M130 180 L215 92 L300 180 L385 92 L470 180", start: { x: 130, y: 180 } },
-  { name: "Loop", glyph: "∞", path: "M300 150 C250 70 175 100 215 160 C245 205 280 185 300 150 C320 115 355 95 385 125 C430 170 360 215 300 150", start: { x: 300, y: 150 } },
-];
+import { useEffect, useRef, useState, type PointerEvent } from "react";
+import bundledPrewriting from "@/content/prewriting.json";
+import { scoreAttempt, type ScoreResult } from "@/app/engine/scoring/score";
 
 type DrawPoint = { x: number; y: number };
+type PrewritingStroke = typeof bundledPrewriting[number];
 
 export function StrokeActivity() {
+  const [strokes, setStrokes] = useState<PrewritingStroke[]>(bundledPrewriting);
   const [strokeIndex, setStrokeIndex] = useState(0);
   const [points, setPoints] = useState<DrawPoint[]>([]);
   const [drawing, setDrawing] = useState(false);
   const [message, setMessage] = useState("");
   const [hintOpen, setHintOpen] = useState(false);
   const [teacherOpen, setTeacherOpen] = useState(false);
-  const selectedStroke = STROKES[strokeIndex];
+  const [contentNotice, setContentNotice] = useState("");
+  const [result, setResult] = useState<ScoreResult | null>(null);
+  const pointsRef = useRef<DrawPoint[]>([]);
+  const guideRef = useRef<SVGPathElement>(null);
+  const selectedStroke = strokes[Math.min(strokeIndex, strokes.length - 1)];
+
+  useEffect(() => {
+    let active = true;
+    void fetch("/api/content?kind=prewriting")
+      .then((response) => {
+        if (!response.ok) throw new Error("Content request failed");
+        return response.json() as Promise<{ items: PrewritingStroke[] }>;
+      })
+      .then((data) => {
+        if (!active || data.items.length === 0) return;
+        setStrokes(data.items);
+        setStrokeIndex(0);
+      })
+      .catch(() => {
+        console.error("[trace] Content refresh failed; bundled stroke guides are still available.");
+        if (active) setContentNotice("We’re using the ready-to-practice stroke guides.");
+      });
+    return () => { active = false; };
+  }, []);
 
   function readPoint(event: PointerEvent<SVGSVGElement>): DrawPoint {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -34,35 +51,66 @@ export function StrokeActivity() {
 
   function startDrawing(event: PointerEvent<SVGSVGElement>) {
     event.currentTarget.setPointerCapture(event.pointerId);
-    setPoints([readPoint(event)]);
+    const firstPoint = readPoint(event);
+    pointsRef.current = [firstPoint];
+    setPoints(pointsRef.current);
     setDrawing(true);
     setMessage("");
+    setResult(null);
   }
 
   function continueDrawing(event: PointerEvent<SVGSVGElement>) {
     if (!drawing) return;
-    setPoints((current) => [...current, readPoint(event)]);
+    // React may run the updater after the pointer event has ended, when currentTarget is null.
+    const point = readPoint(event);
+    pointsRef.current = [...pointsRef.current, point];
+    setPoints(pointsRef.current);
   }
 
-  function endDrawing() {
+  function endDrawing(event: PointerEvent<SVGSVGElement>) {
     if (!drawing) return;
     setDrawing(false);
-    setMessage("Lovely lines! You’re learning the shape with your hand.");
+    if (pointsRef.current.length > 0) {
+      pointsRef.current = [...pointsRef.current, readPoint(event)];
+      setPoints(pointsRef.current);
+    }
+    const guide = guideRef.current;
+    if (!guide || pointsRef.current.length < 2) {
+      setMessage("Try following the line from the green dot.");
+      setResult(null);
+      return;
+    }
+    const length = guide.getTotalLength();
+    const count = Math.max(24, Math.ceil(length / 4));
+    const template = Array.from({ length: count }, (_, index) => {
+      const point = guide.getPointAtLength(length * index / (count - 1));
+      return { x: point.x / 600, y: point.y / 300 };
+    });
+    const userStroke = pointsRef.current.map((point) => ({ x: point.x / 600, y: point.y / 300 }));
+    const scored = scoreAttempt([userStroke], [template], { tolerance: 0.09, scoreOrder: false });
+    setResult(scored);
+    setMessage(scored.stars >= 2
+      ? "Lovely tracing! You followed the guide."
+      : "Good try! Start at the green dot and follow the line slowly.");
   }
 
   function clearStroke() {
     setPoints([]);
+    pointsRef.current = [];
     setMessage("");
+    setResult(null);
   }
 
   function nextStroke() {
-    if (strokeIndex < STROKES.length - 1) {
+    if (strokeIndex < strokes.length - 1) {
       setStrokeIndex(strokeIndex + 1);
     } else {
       setStrokeIndex(0);
       setMessage("You practiced every first stroke. A strong start!");
     }
     setPoints([]);
+    pointsRef.current = [];
+    setResult(null);
   }
 
   const drawnPath = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
@@ -72,12 +120,13 @@ export function StrokeActivity() {
       <header className="activity-header">
         <Link className="back-link" href="/trace" aria-label="Back to tracing">←</Link>
         <div><span className="activity-eyebrow">TRACE · FIRST STROKES</span><h1>Practice a {selectedStroke.name.toLowerCase()}</h1></div>
-        <span className="activity-level">✏️ <span>{strokeIndex + 1} of {STROKES.length}</span></span>
+        <span className="activity-level">✏️ <span>{strokeIndex + 1} of {strokes.length}</span></span>
       </header>
       <div className="puzzle-prompt"><span aria-hidden="true">🐰</span><p>Follow the dotted path with your finger or a pen.</p></div>
       <div className="stroke-picker" aria-label="Choose a practice stroke">
-        {STROKES.map((stroke, index) => <button className={index === strokeIndex ? "selected" : ""} key={stroke.name} onClick={() => { setStrokeIndex(index); setPoints([]); setMessage(""); }} aria-label={stroke.name} aria-current={index === strokeIndex ? "step" : undefined}>{stroke.glyph}</button>)}
+        {strokes.map((stroke, index) => <button className={index === strokeIndex ? "selected" : ""} key={stroke.id} onClick={() => { setStrokeIndex(index); setPoints([]); pointsRef.current = []; setMessage(""); setResult(null); }} aria-label={stroke.name} aria-current={index === strokeIndex ? "step" : undefined}>{stroke.glyph}</button>)}
       </div>
+      {contentNotice && <p className="content-notice" role="status">{contentNotice}</p>}
       <div className="paper-wrap">
         <svg
           className="practice-paper"
@@ -87,10 +136,10 @@ export function StrokeActivity() {
           onPointerDown={startDrawing}
           onPointerMove={continueDrawing}
           onPointerUp={endDrawing}
-          onPointerCancel={endDrawing}
+          onPointerCancel={() => setDrawing(false)}
         >
           <path className="paper-rule" d="M25 75 H575 M25 150 H575 M25 225 H575" />
-          <path className="trace-guide" d={selectedStroke.path} />
+          <path ref={guideRef} className="trace-guide" d={selectedStroke.path} />
           {points.length > 0 && <>
             <circle className="start-dot" cx={points[0].x} cy={points[0].y} r="10" />
             <path className="child-stroke" d={drawnPath} />
@@ -98,7 +147,7 @@ export function StrokeActivity() {
           {points.length === 0 && <circle className="start-dot" cx={selectedStroke.start.x} cy={selectedStroke.start.y} r="10" />}
         </svg>
       </div>
-      {message && <div className="kind-feedback" role="status"><span aria-hidden="true">✨</span> {message}</div>}
+      {message && <div className="kind-feedback" role="status"><span aria-hidden="true">{result && result.stars < 2 ? "🌱" : "✨"}</span> {message}{result && <span className="trace-score" aria-label={`${result.stars} stars`}> {"★".repeat(result.stars)}{"☆".repeat(3 - result.stars)}</span>}</div>}
       <div className="trace-actions"><button className="secondary-action" onClick={clearStroke}>Clear <span aria-hidden="true">↺</span></button><button className="primary-action" onClick={nextStroke}>Next stroke <span aria-hidden="true">→</span></button></div>
       <div className="help-row">
         <button className={`help-button ${hintOpen ? "selected" : ""}`} onClick={() => setHintOpen(!hintOpen)}><span>💡</span> Need a hint?</button>
