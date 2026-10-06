@@ -53,7 +53,8 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid rgb(43 45 66 / 8%);
 }
 
-.brand { display: inline-flex; align-items: center; gap: 11px; font-size: 25px; font-weight: 800; letter-spacing: -1.2px; }
+.brand { display: inline-flex; align-items: center; justify-content: center; }
+.brand-logo { display: block; width: 82px; height: 82px; object-fit: contain; }
 .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 13px 13px 13px 5px; background: var(--primary); color: white; font-size: 25px; font-weight: 800; transform: rotate(-4deg); }
 .brand-dot { color: var(--math); }
 .topbar-right { display: flex; align-items: center; gap: 22px; }
@@ -73,7 +74,6 @@ a { color: inherit; text-decoration: none; }
 .foundation-note strong, .foundation-note small { display: block; }
 .foundation-note strong { font-size: 13px; }
 .foundation-note small { margin-top: 2px; color: var(--muted); font-size: 11px; }
-.foundation-arrow { margin-left: 18px; color: #d49500; font-size: 18px; }
 
 .growth-art { position: relative; height: 325px; overflow: hidden; isolation: isolate; border-radius: 34px; background: #eff5ff; }
 .sun-orbit { position: absolute; top: 27px; right: 91px; width: 137px; height: 137px; border: 1px dashed rgb(255 201 74 / 55%); border-radius: 50%; }
@@ -99,26 +99,20 @@ a { color: inherit; text-decoration: none; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; margin-bottom: 19px; }
 .section-kicker { color: #a18b6e; font-size: 10px; letter-spacing: 1.7px; }
 .section-heading h2 { margin: 7px 0 0; font-size: 26px; font-weight: 750; letter-spacing: -.8px; }
-.section-hint { padding-bottom: 4px; color: var(--muted); font-size: 13px; }
-.section-hint span { padding-left: 5px; color: var(--primary); font-size: 20px; }
+.section-hint { padding-bottom: 4px; color: var(--muted); font-size: 14px; font-weight: 700; }
 .module-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 19px; }
-.module-card { --accent: var(--math); position: relative; min-height: 221px; overflow: hidden; padding: 17px 20px 18px; border: 1px solid rgb(43 45 66 / 6%); border-radius: var(--radius-card); background: var(--surface); box-shadow: 0 7px 20px rgb(43 45 66 / 4%); transition: transform 180ms ease, box-shadow 180ms ease; }
-.module-card:hover, .module-card:focus-visible { transform: translateY(-5px); box-shadow: 0 15px 28px rgb(43 45 66 / 10%); outline: 3px solid color-mix(in srgb, var(--accent) 34%, transparent); outline-offset: 3px; }
+.module-card { --accent: var(--math); position: relative; min-height: 252px; overflow: hidden; padding: 22px; border: 2px solid color-mix(in srgb, var(--accent) 28%, white); border-radius: 28px 28px 28px 16px; background: #fff5e9; box-shadow: 0 5px 0 color-mix(in srgb, var(--accent) 35%, white); transition: transform 160ms ease, box-shadow 160ms ease; }
+.module-card:hover, .module-card:focus-visible { transform: translateY(-3px) rotate(-.5deg); box-shadow: 0 8px 0 color-mix(in srgb, var(--accent) 35%, white); outline: 3px solid color-mix(in srgb, var(--accent) 30%, transparent); outline-offset: 3px; }
 .module-card:active { transform: scale(.985); }
-.math-card { --accent: var(--math); background: linear-gradient(145deg, #fff 45%, #fff3e9); }
-.puzzle-card { --accent: var(--puzzle); background: linear-gradient(145deg, #fff 45%, #f5efff); }
-.trace-card { --accent: var(--trace); background: linear-gradient(145deg, #fff 45%, #eaf8ed); }
-.card-topline { display: flex; align-items: center; justify-content: space-between; }
-.card-number { color: #a5a5ad; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
-.card-arrow { position: relative; z-index: 2; width: 35px; height: 35px; display: grid; place-items: center; border-radius: 12px; background: rgb(255 255 255 / 86%); color: var(--accent); font-size: 19px; }
-.module-icon { display: block; width: fit-content; margin: 3px 0 6px 4px; font-size: 42px; filter: drop-shadow(0 5px 4px rgb(43 45 66 / 9%)); transition: transform 180ms ease; }
-.module-card:hover .module-icon { transform: rotate(-8deg) scale(1.08); }
+.puzzle-card { --accent: var(--puzzle); background: #f4efff; border-radius: 28px 18px 28px 28px; }
+.trace-card { --accent: var(--trace); background: #edf8e9; border-radius: 18px 28px 28px 28px; }
+.module-icon { display: grid; width: 64px; height: 64px; place-items: center; margin: 0 0 15px; border-radius: 22px; background: rgb(255 255 255 / 78%); font-size: 39px; transition: transform 160ms ease; }
+.module-card:hover .module-icon { transform: rotate(-5deg) scale(1.05); }
 .module-title-row { display: flex; align-items: baseline; gap: 9px; }
 .module-title-row h3 { margin: 0; font-size: 23px; font-weight: 800; }
 .module-title-row span { color: var(--accent); font-size: 12px; font-weight: 750; }
-.module-card p { position: relative; z-index: 1; margin: 5px 0 0; color: var(--muted); font-size: 13px; }
-.card-decoration { position: absolute; right: -24px; bottom: -53px; width: 142px; height: 142px; border: 1px solid color-mix(in srgb, var(--accent) 17%, transparent); border-radius: 50%; }
-.card-decoration::after { position: absolute; inset: 12px; border: 1px solid color-mix(in srgb, var(--accent) 13%, transparent); border-radius: inherit; content: ""; }
+.module-card p { margin: 5px 0 14px; color: #666678; font-size: 14px; }
+.play-prompt { display: inline-flex; padding: 7px 12px; border-radius: 999px; background: white; color: var(--accent); font-size: 12px; font-weight: 800; }
 
 .home-footer { min-height: 61px; display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: auto; border-top: 1px solid rgb(43 45 66 / 8%); color: var(--muted); }
 .footer-motto { font-size: 11px; }
@@ -242,6 +236,7 @@ a { color: inherit; text-decoration: none; }
 .trace-activity .help-row { margin-top: 13px; }
 .trace-activity .teacher-note { width: min(100%, 650px); }
 .module-start-action { min-width: 170px; margin-left: 0; }
+.content-notice { margin: 0 auto 10px; color: var(--muted); font-size: 12px; text-align: center; }
 
 @media (min-width: 1500px) {
   .welcome-grid { min-height: 405px; }
@@ -268,7 +263,7 @@ a { color: inherit; text-decoration: none; }
   .home-shell { width: calc(100% - 36px); }
   .topbar { height: 72px; }
   .brand { font-size: 22px; }
-  .brand-mark { width: 34px; height: 34px; }
+  .brand-logo { width: 70px; height: 70px; }
   .topbar-right { gap: 12px; }
   .classroom-pill { font-size: 9px; letter-spacing: .9px; }
   .avatar-button { min-width: 44px; min-height: 44px; }
@@ -289,19 +284,18 @@ a { color: inherit; text-decoration: none; }
   .section-hint { padding-top: 12px; white-space: nowrap; font-size: 11px; }
   .module-grid { grid-template-columns: 1fr; gap: 12px; }
   .module-card { min-height: 144px; padding: 14px 17px; }
-  .card-topline { position: absolute; top: 14px; right: 14px; left: 17px; }
-  .module-icon { margin: 9px 0 4px; font-size: 35px; }
+  .module-icon { width: 48px; height: 48px; margin: 0 0 7px; border-radius: 17px; font-size: 30px; }
   .module-title-row { display: flex; }
   .module-title-row h3 { font-size: 20px; }
   .module-title-row span { display: inline; margin: 0; }
-  .module-card p { margin-top: 4px; }
+  .module-card p { margin: 4px 0 9px; }
+  .play-prompt { padding: 6px 10px; font-size: 11px; }
   .home-footer { min-height: 57px; }
   .footer-motto { max-width: 275px; line-height: 1.6; font-size: 10px; }
   .footer-motto i, .footer-sprinkles { display: none; }
   .module-shell { width: calc(100% - 36px); }
   .module-header { height: 72px; }
-  .module-header .brand { font-size: 20px; }
-  .module-header .brand-mark { width: 32px; height: 32px; }
+  .module-header .brand-logo { width: 62px; height: 62px; }
   .back-link { width: 42px; height: 42px; }
   .module-header-label { font-size: 8px; letter-spacing: .8px; }
   .module-welcome { padding: 52px 0 35px; }
