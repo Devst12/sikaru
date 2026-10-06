@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const modules = [
   {
@@ -8,7 +9,6 @@ const modules = [
     english: "Math",
     note: "Count, build & discover",
     className: "math-card",
-    badge: "01",
   },
   {
     href: "/puzzles",
@@ -17,7 +17,6 @@ const modules = [
     english: "Puzzles",
     note: "Look closely. Find a way.",
     className: "puzzle-card",
-    badge: "02",
   },
   {
     href: "/trace",
@@ -26,7 +25,6 @@ const modules = [
     english: "Trace",
     note: "Start with a simple stroke",
     className: "trace-card",
-    badge: "03",
   },
 ];
 
@@ -35,8 +33,7 @@ export default function Home() {
     <main className="home-shell">
       <header className="topbar">
         <Link className="brand" href="/" aria-label="Sikaru home">
-          <span className="brand-mark" aria-hidden="true">s</span>
-          <span>sikaru<span className="brand-dot">.</span></span>
+          <Image className="brand-logo" src="/logo.png" width={816} height={816} alt="" priority />
         </Link>
         <div className="topbar-right">
           <span className="classroom-pill"><span className="live-dot" /> CLASSROOM MODE</span>
@@ -54,7 +51,6 @@ export default function Home() {
           <div className="foundation-note">
             <span className="foundation-sparkle" aria-hidden="true">✳</span>
             <span><strong>तयार छौ?</strong><small>Ready to learn?</small></span>
-            <span className="foundation-arrow" aria-hidden="true">↓</span>
           </div>
         </div>
 
@@ -83,23 +79,19 @@ export default function Home() {
             <p className="section-kicker">YOUR LEARNING GARDEN</p>
             <h2 id="choose-title">What shall we grow today?</h2>
           </div>
-          <span className="section-hint">Pick one to begin <span aria-hidden="true">↘</span></span>
+          <span className="section-hint">Pick a game to begin!</span>
         </div>
 
         <div className="module-grid">
           {modules.map((module) => (
             <Link className={`module-card ${module.className}`} href={module.href} key={module.href}>
-              <div className="card-topline">
-                <span className="card-number">{module.badge}</span>
-                <span className="card-arrow" aria-hidden="true">↗</span>
-              </div>
               <span className="module-icon" aria-hidden="true">{module.icon}</span>
               <div className="module-title-row">
                 <h3>{module.title}</h3>
                 <span>{module.english}</span>
               </div>
               <p>{module.note}</p>
-              <span className="card-decoration" aria-hidden="true" />
+              <span className="play-prompt">Play together!</span>
             </Link>
           ))}
         </div>
