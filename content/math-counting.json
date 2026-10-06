@@ -1,0 +1,15 @@
+[
+  {
+    "id": "count-fruit-4",
+    "kind": "math-counting",
+    "title": "Count the fruit",
+    "question": "Let’s look carefully. How many fruits do you see?",
+    "answer": 4,
+    "objects": [
+      { "id": "fruit-1", "icon": "🍊", "name": "orange" },
+      { "id": "fruit-2", "icon": "🍎", "name": "apple" },
+      { "id": "fruit-3", "icon": "🍐", "name": "pear" },
+      { "id": "fruit-4", "icon": "🍋", "name": "lemon" }
+    ]
+  }
+]
