@@ -19,9 +19,9 @@ Legend: `[ ]` todo, `[x]` done
 - [ ] **1.1** Create Next.js + TypeScript + Tailwind project. *Done when:* `npm run dev` shows a blank page.
 - [ ] **1.2** Add ESLint, Prettier, Vitest, and scripts (`typecheck`, `lint`, `test`). *Done when:* all three commands run clean.
 - [ ] **1.3** Create folder structure from `ARCHITECTURE.md` (empty folders with placeholder files). *Done when:* structure matches.
-- [ ] **1.4** Add Tailwind design tokens from `DESIGN.md` (colors, fonts, radius). *Done when:* a sample button uses tokens only.
+- [x] **1.4** Add Tailwind design tokens from `DESIGN.md` (colors, fonts, radius). *Done when:* a sample button uses tokens only. (2026-10-06: Added shared CSS design tokens and applied them to the home and module screens.)
 - [ ] **1.5** Build shared components: `Button` (large), `StarRow`, `Modal`, `Mascot` placeholder. *Done when:* shown on a test page.
-- [ ] **1.6** Home page with 3 big module cards (Math, Puzzles, Trace). *Done when:* cards navigate to empty pages.
+- [x] **1.6** Home page with 3 big module cards (Math, Puzzles, Trace). *Done when:* cards navigate to empty pages. (2026-10-06: Added the foundation-first learning garden and linked Math, Puzzles, and Trace starter pages.)
 - [ ] **1.7** Create Supabase project, Prisma schema (`accounts`, `classrooms`, `learners`, `attempts` with nullable `method`, `bests`, `progress`), first migration, RLS enabled with no public policies. *Done when:* `npx prisma migrate dev` succeeds and tables exist.
 - [ ] **1.8** Create MongoDB cluster, Mongo client, and `scripts/seed-content.ts` skeleton. *Done when:* a test document is written and read back.
 - [ ] **1.9** `.env.example` and validated `server/env.ts` (pooled + direct Postgres URLs, Mongo URI). *Done when:* app fails fast with a clear message if a variable is missing.
