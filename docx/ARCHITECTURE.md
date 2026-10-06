@@ -18,7 +18,7 @@
 | Animation | Framer Motion | Smooth icon motion for the math module |
 | API | Next.js route handlers | One server layer; database secrets never reach the browser |
 | Relational DB | Supabase (PostgreSQL) + Prisma | Students, attempts, bests, progress |
-| Auth | Next Auth (email, Google, anonymous guest) +  | Login, guest mode, cookie sessions |
+| Auth | Supabase Auth (`@supabase/ssr`: email, Google, anonymous guest) | Login, guest mode, cookie sessions |
 | Content DB | MongoDB (official driver) | Flexible documents for letter templates, puzzles, levels |
 | PWA | Serwist (service worker) | Offline caching |
 | Testing | Vitest (+ Playwright later) | Unit tests for scoring |
@@ -242,11 +242,11 @@ Inputs: user strokes `U`, template strokes `T`, tolerance `tol` (normalized).
 6. **Final score** = weighted sum:
 
 ```
-score = 0.35*coverage + 0.30*precision + 0.20*direction + 0.15*order
+score = 0.30*coverage + 0.23*precision + 0.25*direction + 0.22*order
 stars: >=0.80 -> 3, >=0.60 -> 2, >=0.35 -> 1, else 0
 ```
 
-The weights and star thresholds are **constants in one file** so they can be tuned. Early levels may disable order/direction scoring (shapes, simple digits) through a per-level flag.
+The current weights and star thresholds are constants in `app/engine/scoring/constants.ts`; weights were tuned against the initial perfect, shaky, partial, scribble, reversed-direction, and wrong-order fixtures. Early levels may disable order/direction scoring (shapes, simple digits) through a per-level flag; active weights are renormalized when a check is disabled.
 
 **Feedback overlay:** user points beyond `tol` render soft orange; template regions not covered render as a gentle dotted hint.
 
@@ -275,20 +275,22 @@ Notes:
 
 ### 7.2 MongoDB: learning content
 
-| Collection | Holds |
-|---|---|
-| `letters` | Letter, digit, and shape templates (shape from section 5) |
-| `puzzles` | Silhouettes, pieces, snap targets, hints |
-| `mathLevels` | Level configs for add, subtract, multiply |
-| `contentMeta` | `{ contentVersion }` |
+The current implementation stores documents in one `learning_content` collection, distinguished by `kind`:
 
-- Documents keep the same shape as the JSON in `src/content/`, which stays the source of truth.
-- `scripts/seed-content.ts` validates with Zod and upserts into MongoDB (unique index on `id`).
-- Route handlers read through content repositories and validate again with Zod.
+| `kind` | Source JSON | Holds |
+|---|---|---|
+| `math-counting` | `content/math-counting.json` | A counting prompt, answer, and visual objects |
+| `shape-pairs` | `content/shape-pairs.json` | Shape matching pairs |
+| `prewriting` | `content/prewriting.json` | Seven ordered pre-writing stroke guides |
+
+- Bundled JSON in the repo is the source of truth and offline fallback.
+- `npm run db:seed` loads `.env` and Zod-validates each document before upserting it by `{ kind, id }` into MongoDB. It creates a unique compound index on those fields.
+- `GET /api/content?kind=...` reads only the supported kinds, validates MongoDB results with Zod, and returns bundled JSON if the database is empty or unavailable. This endpoint is public because it serves learning content, not learner data.
+- The route uses `MONGODB_URI` on the server. The URI is never returned to the browser or logged.
 
 ### 7.3 Why two databases, and the fallback
 
-PostgreSQL suits countable, relational progress data. MongoDB suits nested stroke-template documents and a future authoring tool. If time gets short, content can be served from the bundled JSON alone because the content repository sits behind an interface. Supabase alone can hold everything.
+PostgreSQL is reserved for account-owned attempts and progress. MongoDB holds published learning content. If the content database is unavailable, the current activities use the bundled JSON. The current repo has MongoDB connected; Supabase account and progress wiring still needs a separate Supabase project and environment variables.
 
 ### 7.4 Authentication
 
