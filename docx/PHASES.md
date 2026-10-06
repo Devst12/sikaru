@@ -5,6 +5,13 @@
 
 Legend: `[ ]` todo, `[x]` done
 
+## Current implementation checkpoint
+
+- The child can play a counting round at `/math/counting` using Watch, Build, and Solve with fruit objects and gentle answers.
+- The child can complete a shape matching round at `/puzzles/match` with optional hints and a teacher prompt.
+- The child can practice seven pre-writing strokes at `/trace/practice` with pointer input, guides, clear, and next-stroke controls.
+- These are initial playable slices. They do not complete the later phase requirements for engine tests, scoring, additional visual ways, puzzle ladders, content templates, accounts, saved progress, offline sync, or PWA support.
+
 ---
 
 ## Phase 0: Decisions (before code)
