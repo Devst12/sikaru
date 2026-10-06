@@ -7,7 +7,7 @@
 ## 1. Current status
 
 - **Current phase:** Phase 1 (project setup)
-- **Last completed task:** Home learning garden and module starter pages (Phase 1.4, 1.6)
+- **Last completed task:** Initial playable activities for counting, shape matching, and pre-writing strokes
 - **Next task:** 1.5 Build shared components (Button, StarRow, Modal, Mascot placeholder)
 - **Blockers:** none
 
@@ -51,6 +51,7 @@
 
 | Date | Task | Result | Notes |
 |---|---|---|---|
+| 2026-10-06 | Initial playable learning activities | In progress | Added counting Watch/Build/Solve, matching pairs, and pointer-based pre-writing practice with optional help. These are starter slices; persistence, formal scoring, tests, and remaining curriculum are outstanding. TypeScript and targeted ESLint pass; all four route smoke checks returned 200. |
 | 2026-10-06 | Removed broken remote Geist font loading | Turbopack could not resolve its internal Google font module | Removed next/font/google; use system font fallbacks including Nirmala UI for Devanagari. Build compilation succeeds; standalone TypeScript check passes. |
 | 2026-10-06 | Foundation-first home and module starters | Done | Added the learning garden, three module cards and destination pages; updated metadata and design tokens. Visual verification not run. |
 | 2026-10-06 | Docs set created | Done | Starting point of the project |
