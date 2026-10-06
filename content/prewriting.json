@@ -1,0 +1,9 @@
+[
+  { "id": "standing-line", "kind": "prewriting", "name": "Standing line", "glyph": "│", "path": "M300 52 L300 248", "start": { "x": 300, "y": 52 }, "direction": "down" },
+  { "id": "sleeping-line", "kind": "prewriting", "name": "Sleeping line", "glyph": "─", "path": "M130 150 L470 150", "start": { "x": 130, "y": 150 }, "direction": "right" },
+  { "id": "slanting-line", "kind": "prewriting", "name": "Slanting line", "glyph": "╱", "path": "M170 238 L430 62", "start": { "x": 170, "y": 238 }, "direction": "up-right" },
+  { "id": "curve", "kind": "prewriting", "name": "Curve", "glyph": "⌒", "path": "M145 190 Q300 35 455 190", "start": { "x": 145, "y": 190 }, "direction": "right" },
+  { "id": "circle", "kind": "prewriting", "name": "Circle", "glyph": "○", "path": "M385 150 A85 85 0 1 1 215 150 A85 85 0 1 1 385 150", "start": { "x": 385, "y": 150 }, "direction": "clockwise" },
+  { "id": "zigzag", "kind": "prewriting", "name": "Zigzag", "glyph": "⌁", "path": "M130 180 L215 92 L300 180 L385 92 L470 180", "start": { "x": 130, "y": 180 }, "direction": "right" },
+  { "id": "loop", "kind": "prewriting", "name": "Loop", "glyph": "∞", "path": "M300 150 C250 70 175 100 215 160 C245 205 280 185 300 150 C320 115 355 95 385 125 C430 170 360 215 300 150", "start": { "x": 300, "y": 150 }, "direction": "left-first" }
+]
