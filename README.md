@@ -71,8 +71,10 @@ Auth setup: in Supabase enable Email, Google, and Anonymous sign-ins (see `ARCHI
 | `npm run build` | Production build |
 | `npm run lint` | Lint |
 | `npm run typecheck` | TypeScript check |
-| `npm run test` | Unit tests (scoring engine first) |
-| `npm run db:seed` | Load letters, puzzles, and levels from `src/content/` into MongoDB |
+| `npm run test` | Run the scoring-engine unit tests |
+| `npm run db:seed` | Validate and upsert bundled math, puzzle, and pre-writing content into MongoDB |
+
+The currently playable activities can use `MONGODB_URI` from `.env.local`, with bundled JSON fallback when MongoDB is unavailable. Supabase variables in `.env.example` are needed when account and saved-progress features are implemented.
 
 ## Documentation map
 
